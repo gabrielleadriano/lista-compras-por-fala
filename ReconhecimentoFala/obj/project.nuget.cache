@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "nFa2qYMZ0uUqZzLL1oS9D+rmsD9KS2l9qHSIDntYTjozAHXhlQt3AliVzDuf1RnZlGDkY3lAh7F5NXup25L+Kw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\gabig\\source\\repos\\ReconhecimentoFala\\ReconhecimentoFala\\ReconhecimentoFala.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gabig\\.nuget\\packages\\microsoft.cognitiveservices.speech\\1.23.0\\microsoft.cognitiveservices.speech.1.23.0.nupkg.sha512"
+  ],
+  "logs": []
+}
