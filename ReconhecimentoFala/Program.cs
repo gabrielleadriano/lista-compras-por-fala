@@ -8,6 +8,7 @@ class Program
     static string YourSubscriptionKey = "YourSubscriptionKey";
     static string YourServiceRegion = "YourServiceRegion";
     static SpeechRecognizer speechRecognizer;
+    static SpeechConfig speechConfig;
 
     async static Task OutputSpeechRecognitionResult(SpeechRecognitionResult speechRecognitionResult)
     {
@@ -15,9 +16,9 @@ class Program
         {
             case ResultReason.RecognizedSpeech:
                 if (speechRecognitionResult.Text.ToLower().Contains("lista de compras"))
-                    await buildShoppingList();
+                    await BuildShoppingList();
                 else if (speechRecognitionResult.Text.ToLower().Contains("piada"))
-                    await tellJoke();
+                    await TellJoke();
                 break;
             case ResultReason.NoMatch:
                 Console.WriteLine("NÃO FOI POSSÍVEL RECONHECER A FALA");
@@ -28,15 +29,15 @@ class Program
 
                 if (cancellation.Reason == CancellationReason.Error)
                 {
-                    Console.WriteLine($"CANCELADO: ErrorCode={cancellation.ErrorCode}");
-                    Console.WriteLine($"CANCELADO: ErrorDetails={cancellation.ErrorDetails}");
-                    Console.WriteLine($"CANCELADO: Did you set the speech resource key and region values?");
+                    Console.WriteLine($"CANCELADO: Código={cancellation.ErrorCode}");
+                    Console.WriteLine($"CANCELADO: Detalhes={cancellation.ErrorDetails}");
+                    Console.WriteLine($"CANCELADO: A chave e região estão corretas?");
                 }
                 break;
         }
     }
 
-    async static Task buildShoppingList()
+    async static Task BuildShoppingList()
     {
         bool isComplete = false;
 
@@ -48,8 +49,6 @@ class Program
             switch (listRecognitionResult.Reason)
             {
                 case ResultReason.RecognizedSpeech:
-                    var speechConfig = SpeechConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
-                    speechConfig.SpeechSynthesisVoiceName = "pt-BR-AntonioNeural";
 
                     using (var speechSynthesizer = new SpeechSynthesizer(speechConfig))
                     {
@@ -66,26 +65,27 @@ class Program
         }
     }
 
-    async static Task tellJoke()
+    async static Task TellJoke()
     {
-        var speechConfig = SpeechConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
-        speechConfig.SpeechSynthesisVoiceName = "pt-BR-AntonioNeural";
-
         using (var speechSynthesizer = new SpeechSynthesizer(speechConfig))
         {
-            string text = $"Porque o jacaré levou uma bronca?...Porque ele RÉPTIL de ano";
+            string text = $"O que a televisão foi fazer no dentista?...Tratamento de canal";
             await speechSynthesizer.SpeakTextAsync(text);
         }
+
     }
 
     async static Task Main(string[] args)
     {
-        var speechConfig = SpeechConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
+        speechConfig = SpeechConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
         speechConfig.SpeechRecognitionLanguage = "pt-BR";
+        speechConfig.SpeechSynthesisVoiceName = "pt-BR-AntonioNeural";
 
         using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
         speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
+
         Console.WriteLine("INFORME O COMANDO");
+
         var speechRecognitionResult = await speechRecognizer.RecognizeOnceAsync();
         await OutputSpeechRecognitionResult(speechRecognitionResult);
     }
